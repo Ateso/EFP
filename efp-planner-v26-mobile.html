@@ -7,14 +7,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy: #002f4a;
-  --blue-light: #dae5f3;
-  --blue-mid: #4a9fd4;
-  --blue-soft: #e8f2fb;
+  --bg: #ffffff;
+  --surface: #f4f8fd;
   --border: #b8cfe0;
-  --muted: #5a8aaa;
+  --border-strong: #002f4a;
   --text: #002f4a;
-  --bg: #f4f8fd;
+  --muted: #5a8aaa;
+  --accent: #002f4a;
+  --accent-light: #dae5f3;
+  --accent-pale: #eef4fa;
+  --today-bg: #e8f2fb;
+  --today-border: #4a9fd4;
   --white: #ffffff;
   --green: #4aaa7a;
   --red: #c04040;
@@ -23,7 +26,7 @@
 body { background: var(--bg); color: var(--text); font-family: 'Lato', sans-serif; font-size: 16px; min-height: 100vh; padding-bottom: 100px; }
 
 /* ── HEADER ── */
-.header { background: var(--navy); padding: 14px 20px 12px; position: sticky; top: 0; z-index: 50; }
+.header { background: var(--accent); padding: 14px 20px 12px; position: sticky; top: 0; z-index: 50; }
 .header-brand { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.02em; }
 .header-date { font-size: 11px; color: #7dc4f8; margin-top: 2px; letter-spacing: 0.04em; text-transform: uppercase; }
 .sync-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
@@ -35,23 +38,23 @@ body { background: var(--bg); color: var(--text); font-family: 'Lato', sans-seri
 
 /* ── SECTIONS ── */
 .page { padding: 16px 16px 0; }
-.section { background: var(--white); border-radius: 10px; margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,47,74,0.08); }
-.section-hdr { background: var(--navy); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+.section { background: var(--white); border-radius: 10px; margin-bottom: 14px; overflow: hidden; border: 1px solid var(--border); }
+.section-hdr { background: var(--accent); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
 .section-title { font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.07em; }
 .section-body { padding: 14px 16px; }
 
 /* ── WATER ── */
 .water-grid { display: flex; gap: 8px; flex-wrap: wrap; }
 .water-drop { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: all 0.15s; }
-.water-drop.filled { background: var(--navy); border-color: var(--navy); }
+.water-drop.filled { background: var(--accent); border-color: var(--accent); }
 .water-drop:active { transform: scale(0.92); }
 
 /* ── HABITS ── */
 .habit-list { display: flex; flex-direction: column; gap: 2px; }
-.habit-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--blue-light); cursor: pointer; user-select: none; }
+.habit-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--accent-light); cursor: pointer; user-select: none; }
 .habit-row:last-child { border-bottom: none; }
 .habit-box { width: 24px; height: 24px; border: 2px solid var(--border); border-radius: 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: white; transition: all 0.15s; }
-.habit-box.checked { background: var(--navy); border-color: var(--navy); }
+.habit-box.checked { background: var(--accent); border-color: var(--accent); }
 .habit-box svg { display: none; }
 .habit-box.checked svg { display: block; }
 .habit-label { font-size: 16px; color: var(--text); }
@@ -60,60 +63,52 @@ body { background: var(--bg); color: var(--text); font-family: 'Lato', sans-seri
 .meal-list { display: flex; flex-direction: column; gap: 10px; }
 .meal-item label { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; font-weight: 700; }
 .meal-sel { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-family: 'Lato', sans-serif; font-size: 15px; color: var(--text); background: white; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2390a8c0'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
-.meal-sel:focus { border-color: var(--navy); }
-.meal-notes-ta { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-family: 'Lato', sans-serif; font-size: 14px; color: var(--text); outline: none; resize: none; min-height: 60px; line-height: 1.5; background: white; margin-top: 4px; }
-.meal-notes-ta::placeholder { color: #b0c8da; }
-.meal-notes-ta:focus { border-color: var(--navy); }
-.meal-notes-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 10px; margin-bottom: 5px; font-weight: 700; display: block; }
+.meal-sel:focus { border-color: var(--accent); }
+.notes-lbl { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 12px 0 5px; font-weight: 700; }
+.notes-ta { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-family: 'Lato', sans-serif; font-size: 14px; color: var(--text); background: white; outline: none; resize: none; min-height: 64px; line-height: 1.5; overflow: hidden; }
+.notes-ta:focus { border-color: var(--accent); }
+.notes-ta::placeholder { color: #b0c8da; }
 
 /* ── SYMPTOMS ── */
 .sym-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .sym-btn { padding: 12px 10px; border: 2px solid var(--border); border-radius: 8px; background: white; font-family: 'Lato', sans-serif; font-size: 13px; color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; user-select: none; line-height: 1.3; }
 .sym-btn:active { transform: scale(0.96); }
-.sym-btn.active { background: var(--blue-soft); border-color: var(--blue-mid); color: var(--navy); font-weight: 700; }
+.sym-btn.active { background: var(--today-bg); border-color: var(--today-border); color: var(--accent); font-weight: 700; }
 .sym-btn.no-sym { grid-column: 1/-1; }
 .sym-btn.no-sym.active { background: #e8f8ef; border-color: var(--green); color: #1a6640; }
-.sym-notes-ta { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-family: 'Lato', sans-serif; font-size: 14px; color: var(--text); outline: none; resize: none; min-height: 60px; line-height: 1.5; background: white; margin-top: 10px; }
-.sym-notes-ta::placeholder { color: #b0c8da; }
-.sym-notes-ta:focus { border-color: var(--navy); }
 
 /* ── EXERCISE ── */
 .ex-input { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 11px 14px; font-family: 'Lato', sans-serif; font-size: 15px; color: var(--text); outline: none; background: white; margin-bottom: 12px; }
-.ex-input:focus { border-color: var(--navy); }
+.ex-input:focus { border-color: var(--accent); }
 .ex-input::placeholder { color: #b0c8da; }
 .done-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; cursor: pointer; user-select: none; }
 .done-box { width: 24px; height: 24px; border: 2px solid var(--border); border-radius: 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: white; transition: all 0.15s; }
-.done-box.checked { background: var(--navy); border-color: var(--navy); }
+.done-box.checked { background: var(--accent); border-color: var(--accent); }
 .done-box svg { display: none; }
 .done-box.checked svg { display: block; }
 .done-label { font-size: 16px; color: var(--text); }
 
 /* ── SUPPLEMENTS ── */
 .supp-list { display: flex; flex-direction: column; gap: 2px; }
-.supp-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--blue-light); cursor: pointer; user-select: none; }
+.supp-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--accent-light); cursor: pointer; user-select: none; }
 .supp-row:last-child { border-bottom: none; }
 .supp-box { width: 24px; height: 24px; border: 2px solid var(--border); border-radius: 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: white; transition: all 0.15s; }
-.supp-box.checked { background: var(--navy); border-color: var(--navy); }
+.supp-box.checked { background: var(--accent); border-color: var(--accent); }
 .supp-box svg { display: none; }
 .supp-box.checked svg { display: block; }
 .supp-info { flex: 1; }
 .supp-name { font-size: 15px; color: var(--text); }
 .supp-note { font-size: 11px; color: var(--muted); margin-top: 1px; }
 
-/* ── NOTES ── */
-.notes-ta { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; font-family: 'Lato', sans-serif; font-size: 15px; color: var(--text); outline: none; resize: none; min-height: 110px; line-height: 1.6; background: white; }
-.notes-ta::placeholder { color: #b0c8da; font-style: italic; }
-.notes-ta:focus { border-color: var(--navy); }
-
-/* ── SAVE BAR ── */
-.save-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: var(--navy); border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; align-items: center; z-index: 50; }
-.btn-save { flex: 1; padding: 14px; background: var(--blue-mid); color: white; border: none; border-radius: 8px; font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; transition: all 0.15s; }
+/* ── SAVE BUTTON ── */
+.save-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: var(--accent); border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; align-items: center; z-index: 50; }
+.btn-save { flex: 1; padding: 14px; background: var(--today-border); color: white; border: none; border-radius: 8px; font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; transition: all 0.15s; }
 .btn-save:active { transform: scale(0.97); background: #3a8fc4; }
 .btn-settings { width: 46px; height: 46px; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #dae5f3; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
 .btn-settings:active { background: rgba(255,255,255,0.1); }
 
 /* ── TOAST ── */
-.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-10px); background: var(--navy); color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 20px; opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 200; white-space: nowrap; }
+.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-10px); background: var(--accent); color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 20px; opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 200; white-space: nowrap; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast.error { background: var(--red); }
 
@@ -124,9 +119,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Lato', sans-seri
 .modal p { font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
 .modal label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; color: var(--muted); font-weight: 700; }
 .modal input { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: 'Lato', sans-serif; font-size: 15px; color: var(--text); margin-bottom: 14px; outline: none; }
-.modal input:focus { border-color: var(--navy); }
+.modal input:focus { border-color: var(--accent); }
 .modal-footer { display: flex; gap: 10px; }
-.btn-modal-save { flex: 1; padding: 13px; background: var(--navy); color: white; border: none; border-radius: 8px; font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
+.btn-modal-save { flex: 1; padding: 13px; background: var(--accent); color: white; border: none; border-radius: 8px; font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
 .btn-modal-cancel { padding: 13px 20px; background: white; color: var(--muted); border: 1px solid var(--border); border-radius: 8px; font-family: 'Lato', sans-serif; font-size: 14px; cursor: pointer; }
 .hidden { display: none !important; }
 </style>
@@ -184,8 +179,8 @@ body { background: var(--bg); color: var(--text); font-family: 'Lato', sans-seri
     <div class="section-hdr"><span class="section-title">Meals</span></div>
     <div class="section-body">
       <div class="meal-list" id="mealList"></div>
-      <span class="meal-notes-lbl">Meal notes</span>
-      <textarea class="meal-notes-ta" id="mealNotes" placeholder="Notes…"></textarea>
+      <span class="notes-lbl">Meal notes</span>
+      <textarea class="notes-ta" id="mealNotesTa" placeholder="Anything worth noting about today's meals…"></textarea>
     </div>
   </div>
 
@@ -194,7 +189,8 @@ body { background: var(--bg); color: var(--text); font-family: 'Lato', sans-seri
     <div class="section-hdr"><span class="section-title">Digestive Symptoms</span></div>
     <div class="section-body">
       <div class="sym-grid" id="symGrid"></div>
-      <textarea class="sym-notes-ta" id="symNotes" placeholder="Notes…"></textarea>
+      <span class="notes-lbl" style="margin-top:14px;">Symptom notes</span>
+      <textarea class="notes-ta" id="symNotesTa" placeholder="Details about how you felt…"></textarea>
     </div>
   </div>
 
@@ -224,7 +220,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Lato', sans-seri
   <div class="section">
     <div class="section-hdr"><span class="section-title">Notes</span></div>
     <div class="section-body">
-      <textarea class="notes-ta" id="notesField" placeholder="Jot anything down…"></textarea>
+      <textarea class="notes-ta" id="notesTa" placeholder="General notes for today…"></textarea>
     </div>
   </div>
 
@@ -252,16 +248,16 @@ const SYMPTOMS = [
 ];
 
 const SUPPS = [
-  {name:'Zyrtec',         note:'Allergy support'},
-  {name:'Vitamin B12',    note:'Energy'},
-  {name:'NAD',            note:'Cellular health'},
-  {name:'Vitamin D3',     note:'Take with fat'},
-  {name:"St. John's Wort",note:'Mood'},
-  {name:'Spirulina',      note:'Apart from B12'},
-  {name:'Cal/Mag',        note:'Evening'},
-  {name:'Omega-3',        note:'With food'},
-  {name:'Probiotics',     note:'Morning, before eating'},
-  {name:'Multivitamin',   note:'With food'},
+  {name:'Zyrtec',          note:'Allergy support'},
+  {name:'Vitamin B12',     note:'Energy'},
+  {name:'NAD',             note:'Cellular health'},
+  {name:'Vitamin D3',      note:'Take with fat'},
+  {name:"St. John's Wort", note:'Mood'},
+  {name:'Spirulina',       note:'Apart from B12'},
+  {name:'Cal/Mag',         note:'Evening'},
+  {name:'Omega-3',         note:'With food'},
+  {name:'Probiotics',      note:'Morning, before eating'},
+  {name:'Multivitamin',    note:'With food'},
 ];
 
 const DEFAULT_MEALS = {
@@ -272,20 +268,20 @@ const DEFAULT_MEALS = {
 };
 
 // ── STORAGE ────────────────────────────────────────────────────────────────
-const CFG_KEY = 'efp26m-config';
-
+const CFG_KEY   = 'efp26m-config';
 const today     = new Date();
 const todayStr  = today.toDateString();
-const STATE_KEY = 'efp26m-'+todayStr;
+const STATE_KEY = 'efp26m-' + todayStr;
 
-const getState  = () => { try{return JSON.parse(localStorage.getItem(STATE_KEY))||{};}catch{return{};} };
-const saveState = s  => { try{localStorage.setItem(STATE_KEY,JSON.stringify(s));}catch{} };
-const getConfig = () => { try{return JSON.parse(localStorage.getItem(CFG_KEY))||{};}catch{return{};} };
+const getState  = () => { try{ return JSON.parse(localStorage.getItem(STATE_KEY)) || {}; }catch{ return {}; } };
+const saveState = s  => { try{ localStorage.setItem(STATE_KEY, JSON.stringify(s)); }catch{} };
+const getConfig = () => { try{ return JSON.parse(localStorage.getItem(CFG_KEY)) || {}; }catch{ return {}; } };
 
 function getMonday(d){
-  const dt=new Date(d), day=dt.getDay();
-  dt.setDate(dt.getDate()-day+(day===0?-6:1));
-  dt.setHours(0,0,0,0); return dt;
+  const dt = new Date(d), day = dt.getDay();
+  dt.setDate(dt.getDate() - day + (day === 0 ? -6 : 1));
+  dt.setHours(0, 0, 0, 0);
+  return dt;
 }
 const weekStart = getMonday(today);
 
@@ -294,46 +290,53 @@ document.getElementById('headerDate').textContent =
   today.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
 
 // ── UI UTILS ───────────────────────────────────────────────────────────────
-function setSyncStatus(st,lbl){
-  document.getElementById('syncDot').className='sync-dot '+st;
-  document.getElementById('syncLabel').textContent=lbl;
+function setSyncStatus(st, lbl){
+  document.getElementById('syncDot').className = 'sync-dot ' + st;
+  document.getElementById('syncLabel').textContent = lbl;
 }
-function showToast(msg,err){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast show'+(err?' error':'');
-  setTimeout(()=>t.className='toast',2800);
+function showToast(msg, err){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 2800);
 }
 function ck(){
   return `<svg width="13" height="10" viewBox="0 0 13 10"><polyline points="1,5 5,9 12,1" fill="none" stroke="white" stroke-width="2"/></svg>`;
+}
+function autoResize(ta){
+  ta.style.height = 'auto';
+  ta.style.height = ta.scrollHeight + 'px';
 }
 
 // ── SETTINGS ──────────────────────────────────────────────────────────────
 function openSettings(){ document.getElementById('settingsModal').classList.remove('hidden'); }
 function closeSettings(){ document.getElementById('settingsModal').classList.add('hidden'); }
 function saveSettings(){
-  const url=document.getElementById('scriptUrl').value.trim();
-  const name=document.getElementById('userName').value.trim();
-  if(!url){alert('Please enter your Web App URL.');return;}
-  localStorage.setItem(CFG_KEY,JSON.stringify({url,name}));
-  closeSettings(); setSyncStatus('synced','connected'); showToast('Connected ✓');
+  const url  = document.getElementById('scriptUrl').value.trim();
+  const name = document.getElementById('userName').value.trim();
+  if(!url){ alert('Please enter your Web App URL.'); return; }
+  localStorage.setItem(CFG_KEY, JSON.stringify({url, name}));
+  closeSettings();
+  setSyncStatus('synced', 'connected');
+  showToast('Connected ✓');
 }
 
 // ── WATER ─────────────────────────────────────────────────────────────────
 function buildWater(){
-  const state=getState();
-  const grid=document.getElementById('waterGrid');
-  grid.innerHTML='';
-  for(let g=0;g<8;g++){
-    const key='water-'+g;
-    const drop=document.createElement('div');
-    drop.className='water-drop'+(state[key]?' filled':'');
-    drop.innerHTML='💧';
-    drop.style.opacity=state[key]?'1':'0.25';
-    drop.onclick=()=>{
+  const state = getState();
+  const grid  = document.getElementById('waterGrid');
+  grid.innerHTML = '';
+  for(let g = 0; g < 8; g++){
+    const key  = 'water-' + g;
+    const drop = document.createElement('div');
+    drop.className = 'water-drop' + (state[key] ? ' filled' : '');
+    drop.innerHTML = '💧';
+    drop.style.opacity = state[key] ? '1' : '0.25';
+    drop.onclick = () => {
       drop.classList.toggle('filled');
-      const on=drop.classList.contains('filled');
-      drop.style.opacity=on?'1':'0.25';
-      const s=getState(); s[key]=on; saveState(s);
+      const on = drop.classList.contains('filled');
+      drop.style.opacity = on ? '1' : '0.25';
+      const s = getState(); s[key] = on; saveState(s);
     };
     grid.appendChild(drop);
   }
@@ -341,19 +344,19 @@ function buildWater(){
 
 // ── HABITS ────────────────────────────────────────────────────────────────
 function buildHabits(){
-  const state=getState();
-  const list=document.getElementById('habitList');
-  list.innerHTML='';
-  HABITS.forEach(habit=>{
-    const key='habit-'+habit;
-    const row=document.createElement('div');
-    row.className='habit-row';
-    row.innerHTML=`<div class="habit-box ${state[key]?'checked':''}">${ck()}</div>
+  const state = getState();
+  const list  = document.getElementById('habitList');
+  list.innerHTML = '';
+  HABITS.forEach(habit => {
+    const key = 'habit-' + habit;
+    const row = document.createElement('div');
+    row.className = 'habit-row';
+    row.innerHTML = `<div class="habit-box ${state[key] ? 'checked' : ''}">${ck()}</div>
       <span class="habit-label">${habit}</span>`;
-    row.onclick=()=>{
-      const box=row.querySelector('.habit-box');
+    row.onclick = () => {
+      const box = row.querySelector('.habit-box');
       box.classList.toggle('checked');
-      const s=getState(); s[key]=box.classList.contains('checked'); saveState(s);
+      const s = getState(); s[key] = box.classList.contains('checked'); saveState(s);
     };
     list.appendChild(row);
   });
@@ -361,87 +364,95 @@ function buildHabits(){
 
 // ── MEALS ─────────────────────────────────────────────────────────────────
 function buildMeals(){
-  const state=getState();
-  const list=document.getElementById('mealList');
-  list.innerHTML='';
+  const state = getState();
+  const list  = document.getElementById('mealList');
+  list.innerHTML = '';
   [['b','Breakfast',DEFAULT_MEALS.breakfast],
    ['l','Lunch',DEFAULT_MEALS.lunch],
    ['d','Dinner',DEFAULT_MEALS.dinner],
-   ['s','Snacks',DEFAULT_MEALS.snacks]].forEach(([code,label,opts])=>{
-    const key='meal-'+code;
-    const item=document.createElement('div');
-    item.className='meal-item';
-    item.innerHTML=`<label>${label}</label>
+   ['s','Snacks',DEFAULT_MEALS.snacks]].forEach(([code, label, opts]) => {
+    const key  = 'meal-' + code;
+    const item = document.createElement('div');
+    item.className = 'meal-item';
+    item.innerHTML = `<label>${label}</label>
       <select class="meal-sel" data-key="${key}">
-        ${opts.map(o=>`<option${state[key]===o?' selected':''}>${o}</option>`).join('')}
+        ${opts.map(o => `<option${state[key] === o ? ' selected' : ''}>${o}</option>`).join('')}
       </select>`;
     list.appendChild(item);
   });
-  list.querySelectorAll('.meal-sel').forEach(el=>{
-    el.addEventListener('change',()=>{ const s=getState(); s[el.dataset.key]=el.value; saveState(s); });
+  list.querySelectorAll('.meal-sel').forEach(el => {
+    el.addEventListener('change', () => { const s = getState(); s[el.dataset.key] = el.value; saveState(s); });
   });
 
   // Meal notes
-  const mnEl=document.getElementById('mealNotes');
-  mnEl.value=state['mealNotes']||'';
-  mnEl.oninput=()=>{ const s=getState(); s['mealNotes']=mnEl.value; saveState(s); };
+  const ta = document.getElementById('mealNotesTa');
+  ta.value = getState()['mealNotes'] || '';
+  autoResize(ta);
+  ta.addEventListener('input', () => {
+    autoResize(ta);
+    const s = getState(); s['mealNotes'] = ta.value; saveState(s);
+  });
 }
 
 // ── SYMPTOMS ──────────────────────────────────────────────────────────────
 function buildSymptoms(){
-  const state=getState();
-  const grid=document.getElementById('symGrid');
-  grid.innerHTML='';
-  SYMPTOMS.forEach((sym,si)=>{
-    const key='sym-'+si;
-    const btn=document.createElement('div');
-    btn.className='sym-btn'+(sym.key==='noSymptoms'?' no-sym':'')+(state[key]?' active':'');
-    btn.textContent=sym.label;
-    btn.onclick=()=>{
+  const state = getState();
+  const grid  = document.getElementById('symGrid');
+  grid.innerHTML = '';
+  SYMPTOMS.forEach((sym, si) => {
+    const key = 'sym-' + si;
+    const btn = document.createElement('div');
+    btn.className = 'sym-btn' + (sym.key === 'noSymptoms' ? ' no-sym' : '') + (state[key] ? ' active' : '');
+    btn.textContent = sym.label;
+    btn.onclick = () => {
       btn.classList.toggle('active');
-      const s=getState(); s[key]=btn.classList.contains('active'); saveState(s);
+      const s = getState(); s[key] = btn.classList.contains('active'); saveState(s);
     };
     grid.appendChild(btn);
   });
 
   // Symptom notes
-  const snEl=document.getElementById('symNotes');
-  snEl.value=state['symptomNotes']||'';
-  snEl.oninput=()=>{ const s=getState(); s['symptomNotes']=snEl.value; saveState(s); };
+  const ta = document.getElementById('symNotesTa');
+  ta.value = getState()['symptomNotes'] || '';
+  autoResize(ta);
+  ta.addEventListener('input', () => {
+    autoResize(ta);
+    const s = getState(); s['symptomNotes'] = ta.value; saveState(s);
+  });
 }
 
 // ── EXERCISE ──────────────────────────────────────────────────────────────
 function buildExercise(){
-  const state=getState();
-  const exInp=document.getElementById('exInput');
-  const doneBox=document.getElementById('doneBox');
-  exInp.value=state['ex']||'';
-  exInp.oninput=()=>{ const s=getState(); s['ex']=exInp.value; saveState(s); };
+  const state  = getState();
+  const exInp  = document.getElementById('exInput');
+  const doneBox= document.getElementById('doneBox');
+  exInp.value  = state['ex'] || '';
+  exInp.oninput = () => { const s = getState(); s['ex'] = exInp.value; saveState(s); };
   if(state['exd']) doneBox.classList.add('checked');
-  document.getElementById('doneRow').onclick=()=>{
+  document.getElementById('doneRow').onclick = () => {
     doneBox.classList.toggle('checked');
-    const s=getState(); s['exd']=doneBox.classList.contains('checked'); saveState(s);
+    const s = getState(); s['exd'] = doneBox.classList.contains('checked'); saveState(s);
   };
 }
 
 // ── SUPPLEMENTS ───────────────────────────────────────────────────────────
 function buildSupps(){
-  const state=getState();
-  const list=document.getElementById('suppList');
-  list.innerHTML='';
-  SUPPS.forEach((supp,si)=>{
-    const key='supp-'+si;
-    const row=document.createElement('div');
-    row.className='supp-row';
-    row.innerHTML=`<div class="supp-box ${state[key]?'checked':''}">${ck()}</div>
+  const state = getState();
+  const list  = document.getElementById('suppList');
+  list.innerHTML = '';
+  SUPPS.forEach((supp, si) => {
+    const key = 'supp-' + si;
+    const row = document.createElement('div');
+    row.className = 'supp-row';
+    row.innerHTML = `<div class="supp-box ${state[key] ? 'checked' : ''}">${ck()}</div>
       <div class="supp-info">
         <div class="supp-name">${supp.name}</div>
         <div class="supp-note">${supp.note}</div>
       </div>`;
-    row.onclick=()=>{
-      const box=row.querySelector('.supp-box');
+    row.onclick = () => {
+      const box = row.querySelector('.supp-box');
       box.classList.toggle('checked');
-      const s=getState(); s[key]=box.classList.contains('checked'); saveState(s);
+      const s = getState(); s[key] = box.classList.contains('checked'); saveState(s);
     };
     list.appendChild(row);
   });
@@ -449,86 +460,84 @@ function buildSupps(){
 
 // ── NOTES ─────────────────────────────────────────────────────────────────
 function buildNotes(){
-  const NKEY = 'efp26m-notes-'+todayStr;
-  const ta = document.getElementById('notesField');
-  ta.value = localStorage.getItem(NKEY)||'';
-  ta.addEventListener('input', ()=>{
-    ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px';
-    localStorage.setItem(NKEY, ta.value);
+  const ta = document.getElementById('notesTa');
+  ta.value = getState()['notes'] || '';
+  autoResize(ta);
+  ta.addEventListener('input', () => {
+    autoResize(ta);
+    const s = getState(); s['notes'] = ta.value; saveState(s);
   });
-  requestAnimationFrame(()=>{ ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; });
 }
 
 // ── SAVE ──────────────────────────────────────────────────────────────────
 async function saveNow(){
-  const cfg=getConfig();
-  if(!cfg.url){ showToast('Connect to Google Sheets first — tap ⚙',true); return; }
-  const state=getState();
+  const cfg = getConfig();
+  if(!cfg.url){ showToast('Connect to Google Sheets first — tap ⚙', true); return; }
 
-  const d=today;
-  const mm=d.getMonth()+1, dd=d.getDate();
-  const dateStr=d.getFullYear()+'-'+(mm<10?'0':'')+mm+'-'+(dd<10?'0':'')+dd;
+  const state = getState();
+  const d     = today;
+  const mm    = d.getMonth() + 1, dd = d.getDate();
+  const dateStr = d.getFullYear() + '-' + (mm < 10 ? '0' : '') + mm + '-' + (dd < 10 ? '0' : '') + dd;
 
-  let waterGlasses=0;
-  for(let g=0;g<8;g++){ if(state['water-'+g]) waterGlasses++; }
+  let waterGlasses = 0;
+  for(let g = 0; g < 8; g++){ if(state['water-' + g]) waterGlasses++; }
 
-  let habitsDone=0;
-  HABITS.forEach(h=>{ if(state['habit-'+h]) habitsDone++; });
+  let habitsDone = 0;
+  HABITS.forEach(h => { if(state['habit-' + h]) habitsDone++; });
 
-  let suppsTaken=0;
-  SUPPS.forEach((_,si)=>{ if(state['supp-'+si]) suppsTaken++; });
-  const suppsList=SUPPS.filter((_,si)=>state['supp-'+si]).map(s=>s.name).join(', ');
+  let suppsTaken = 0;
+  SUPPS.forEach((_, si) => { if(state['supp-' + si]) suppsTaken++; });
+  const suppsList = SUPPS.filter((_, si) => state['supp-' + si]).map(s => s.name).join(', ');
 
-  const sympData={};
-  SYMPTOMS.forEach((sym,si)=>{ sympData[sym.key]=state['sym-'+si]||false; });
+  const sympData = {};
+  SYMPTOMS.forEach((sym, si) => { sympData[sym.key] = state['sym-' + si] || false; });
 
-  const NKEY='efp26m-notes-'+todayStr;
-
-  const payload={
-    type:        'day',
-    date:        dateStr,
-    dayName:     ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()],
-    weekOf:      weekStart.toLocaleDateString(),
-    user:        cfg.name||'—',
-    breakfast:   state['meal-b']||'',
-    lunch:       state['meal-l']||'',
-    dinner:      state['meal-d']||'',
-    snacks:      state['meal-s']||'',
-    mealNotes:   state['mealNotes']||'',
+  const payload = {
+    type:         'day',
+    date:         dateStr,
+    dayName:      ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()],
+    weekOf:       weekStart.toLocaleDateString(),
+    user:         cfg.name || '—',
+    breakfast:    state['meal-b'] || '',
+    lunch:        state['meal-l'] || '',
+    dinner:       state['meal-d'] || '',
+    snacks:       state['meal-s'] || '',
+    mealNotes:    state['mealNotes'] || '',
     ...sympData,
-    symptomNotes:state['symptomNotes']||'',
-    exercise:    state['ex']||'',
-    exerciseDone:state['exd']||false,
+    symptomNotes: state['symptomNotes'] || '',
+    exercise:     state['ex'] || '',
+    exerciseDone: state['exd'] || false,
     waterGlasses,
     habitsDone,
-    habitsTotal: HABITS.length,
+    habitsTotal:  HABITS.length,
     suppsTaken,
-    suppsTotal:  SUPPS.length,
+    suppsTotal:   SUPPS.length,
     suppsList,
-    notes:       localStorage.getItem(NKEY)||'',
+    notes:        state['notes'] || '',
   };
 
-  setSyncStatus('syncing','saving…');
-  try{
-    await fetch(cfg.url,{
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(payload)
+  setSyncStatus('syncing', 'saving…');
+  try {
+    await fetch(cfg.url, {
+      method: 'POST',
+      mode:   'no-cors',
+      headers: {'Content-Type':'application/json'},
+      body:    JSON.stringify(payload)
     });
-    setSyncStatus('synced','saved');
+    setSyncStatus('synced', 'saved');
     showToast('Saved ✓');
-  }catch{
-    setSyncStatus('error','save failed');
-    showToast('Save failed',true);
+  } catch {
+    setSyncStatus('error', 'save failed');
+    showToast('Save failed', true);
   }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-const cfg=getConfig();
+const cfg = getConfig();
 if(cfg.url){
-  document.getElementById('scriptUrl').value=cfg.url;
-  document.getElementById('userName').value=cfg.name||'';
-  setSyncStatus('synced','connected');
+  document.getElementById('scriptUrl').value = cfg.url;
+  document.getElementById('userName').value  = cfg.name || '';
+  setSyncStatus('synced', 'connected');
 }
 buildWater();
 buildHabits();
