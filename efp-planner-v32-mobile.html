@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>EFP Planner</title>
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #eef2f7;
@@ -23,8 +22,8 @@
   --top-h: 50px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; }
-body { background: var(--bg); color: var(--text); font-family: 'Lato', sans-serif; font-size: 15px; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; }
 
 /* ── TOPBAR ── */
 .topbar {
@@ -979,7 +978,6 @@ function renderTodayContent(){
   suppCard.innerHTML='<div class="card-hdr"><span class="card-hdr-title">Supplements</span></div>';
   const spb=document.createElement('div'); spb.className='card-body';
   const sl=document.createElement('div'); sl.className='supp-list';
-  const supps=getSupps();
   supps.forEach((supp,si)=>{
     const key='supp-'+si+'-'+di;
     const row=document.createElement('div');
@@ -1179,11 +1177,15 @@ function initNudges(){
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-const cfg=getConfig();
-if(cfg.url){ setSyncStatus('synced'); }
-buildToday();
-initNudges();
-if(cfg.url) loadCalendarEvents();
+try {
+  const cfg=getConfig();
+  if(cfg.url){ setSyncStatus('synced'); }
+  buildToday();
+  initNudges();
+  if(cfg.url) loadCalendarEvents();
+} catch(e) {
+  document.querySelector('.scroll-area').innerHTML='<div style="padding:24px;color:#c04040;font-size:14px;"><strong>Init error:</strong><br>'+e.message+'</div>';
+}
 </script>
 </body>
 </html>
