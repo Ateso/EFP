@@ -184,12 +184,6 @@ body {
   position: relative;
 }
 .tc-item:hover { background: rgba(255,255,255,0.05); }
-.tc-item.required::before {
-  content: '';
-  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-  width: 2px; height: 60%; border-radius: 1px;
-  background: var(--amber-mid);
-}
 .tc-item.done::before { background: var(--green); }
 .tc-check {
   width: 16px; height: 16px;
@@ -210,7 +204,6 @@ body {
   background: rgba(255,255,255,0.1);
   color: rgba(255,255,255,0.5);
 }
-.tc-item.required:not(.done) .tc-count { background: var(--amber-pale); color: var(--amber); }
 .tc-item.done .tc-count { background: rgba(77,217,160,0.15); color: #4dd9a0; }
 
 /* today highlight (which day column is selected) */
@@ -331,14 +324,7 @@ body {
 .log-col:last-child { border-right: none; }
 .log-col-lbl { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 7px; font-weight: 700; }
 
-/* required field marker */
-.required-marker {
-  display: inline-flex; align-items: center; gap: 3px;
-  font-size: 9px; font-weight: 700; color: var(--amber);
-  background: var(--amber-pale); border-radius: 3px; padding: 1px 5px;
-  margin-left: 5px; vertical-align: middle;
-}
-.log-col.complete .required-marker { display: none; }
+.required-marker { display: none; }
 .log-col.complete { background: #fafffe; }
 
 .meal-row { margin-bottom: 5px; }
@@ -615,7 +601,7 @@ const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const DAYS_FULL  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const WEEKDAY_IDX = [0,1,2,3,4];
 
-let HABITS = ['Fiber','Feet','Face','Kegels','Teeth','Meds','Meditate'];
+let HABITS = ['Fiber','Feet','Face','Kegels','Teeth'];
 
 const SYMPTOMS = [
   {key:'bloating',  label:'Bloating'},
@@ -890,7 +876,7 @@ function buildTodayChecklist(items, dayIdx) {
       const item = items[key];
       if(!item) return;
       const row = document.createElement('div');
-      row.className = 'tc-item required' + (item.done?' done':'') + (item.partial&&!item.done?' partial':'');
+      row.className = 'tc-item' + (item.done?' done':'') + (item.partial&&!item.done?' partial':'');
 
       const cb = document.createElement('div');
       cb.className = 'tc-check';
@@ -1311,7 +1297,7 @@ function buildDailyLog(){
     const dDone=!!(state['meal-'+i+'-d']&&state['meal-'+i+'-d']!=='—');
     const mealsComplete=bDone&&lDone&&dDone;
     if(mealsComplete) mCol.classList.add('complete');
-    mCol.innerHTML=`<div class="log-col-lbl">Meals${mealsComplete?'':' <span class="required-marker">required</span>'}</div>`;
+    mCol.innerHTML=`<div class="log-col-lbl">Meals</div>`;
     [['b','Breakfast',ml.breakfast],['l','Lunch',ml.lunch],['d','Dinner',ml.dinner],['s','Snacks',ml.snacks]]
     .forEach(([code,label,opts])=>{
       const key='meal-'+i+'-'+code;
@@ -1343,7 +1329,7 @@ function buildDailyLog(){
     sCol.className='log-col';
     const symLogged=SYMPTOMS.some((_,si)=>state['sym-'+i+'-'+si]);
     if(symLogged) sCol.classList.add('complete');
-    sCol.innerHTML=`<div class="log-col-lbl">Symptoms${symLogged?'':' <span class="required-marker">required</span>'}</div>`;
+    sCol.innerHTML=`<div class="log-col-lbl">Symptoms</div>`;
     const symList=document.createElement('div');
     symList.className='sym-list';
     SYMPTOMS.forEach((sym,si)=>{
@@ -1381,7 +1367,7 @@ function buildDailyLog(){
     eCol.className='log-col';
     const exDone=!!(state['ex-'+i])&&!!(state['exd-'+i]);
     if(exDone) eCol.classList.add('complete');
-    eCol.innerHTML=`<div class="log-col-lbl">Exercise${exDone?'':' <span class="required-marker">required</span>'}</div>`;
+    eCol.innerHTML=`<div class="log-col-lbl">Exercise</div>`;
     const exKey='ex-'+i, doneK='exd-'+i;
     const exInp=document.createElement('input');
     exInp.type='text'; exInp.className='ex-input'+(state[exKey]?' has-value':'');
@@ -1413,7 +1399,7 @@ function buildDailyLog(){
     supps.forEach((_,si)=>{ if(state['supp-'+si+'-'+i]) suppDoneCount++; });
     const suppComplete=suppDoneCount===supps.length;
     if(suppComplete) suppCol.classList.add('complete');
-    suppCol.innerHTML=`<div class="log-col-lbl">Supplements${suppComplete?'':' <span class="required-marker">required</span>'}</div>`;
+    suppCol.innerHTML=`<div class="log-col-lbl">Supplements</div>`;
 
     // progress bar
     const progWrap=document.createElement('div');
@@ -1493,7 +1479,7 @@ function resetWeek(){
 
 // ── CUSTOMIZE HABITS & SUPPLEMENTS ───────────────────────────────────────
 const HABITS_KEY = 'efp25-habits';
-function getHabits(){ try{const h=JSON.parse(localStorage.getItem(HABITS_KEY)); return h&&h.length?h:['Fiber','Feet','Face','Kegels','Teeth','Meds','Meditate'];}catch{return['Fiber','Feet','Face','Kegels','Teeth','Meds','Meditate'];} }
+function getHabits(){ try{const h=JSON.parse(localStorage.getItem(HABITS_KEY)); return h&&h.length?h:['Fiber','Feet','Face','Kegels','Teeth'];}catch{return['Fiber','Feet','Face','Kegels','Teeth'];} }
 function saveHabits(h){ try{localStorage.setItem(HABITS_KEY,JSON.stringify(h));}catch{} }
 
 function openCustomize(){
