@@ -145,7 +145,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
   background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5);
 }
-.sec-hdr-badge.incomplete { background: var(--amber-pale); color: var(--amber); }
 .sec-hdr-badge.complete   { background: rgba(77,217,160,0.2); color: #4dd9a0; }
 .sec-body { padding: 12px 14px; }
 
@@ -288,8 +287,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .log-sec { padding:11px 14px; border-bottom:1px solid var(--border); }
 .log-sec:last-child { border-bottom:none; }
 .log-sec-title { font-size:10px; font-weight:900; color:var(--muted); letter-spacing:0.07em; text-transform:uppercase; margin-bottom:7px; display:flex; align-items:center; justify-content:space-between; }
-.req-badge { font-size:9px; background:var(--amber-pale); color:var(--amber); border-radius:3px; padding:1px 5px; font-weight:700; }
-.req-badge.done { display:none; }
+.req-badge { display:none; }
 
 /* ── MORE / SETTINGS SCREEN ── */
 .more-list { display:flex; flex-direction:column; gap:8px; }
@@ -546,7 +544,7 @@ const getConfig = ()=>{ try{return JSON.parse(localStorage.getItem(CFG_KEY))||{}
 const getSupps  = ()=>{ try{const s=JSON.parse(localStorage.getItem(SUPP_KEY));return s&&s.length?s:DEFAULT_SUPPS;}catch{return DEFAULT_SUPPS;} };
 const saveSupps = s =>{ try{localStorage.setItem(SUPP_KEY,JSON.stringify(s));}catch{} };
 const getMeals  = ()=>{ try{const s=JSON.parse(localStorage.getItem(MEAL_KEY));return s||JSON.parse(JSON.stringify(DEFAULT_MEALS));}catch{return JSON.parse(JSON.stringify(DEFAULT_MEALS));} };
-const getHabits = ()=>{ try{const h=JSON.parse(localStorage.getItem(HABITS_KEY));return h&&h.length?h:['Fiber','Feet','Face','Kegels','Teeth','Meds','Meditate'];}catch{return['Fiber','Feet','Face','Kegels','Teeth','Meds','Meditate'];} };
+const getHabits = ()=>{ try{const h=JSON.parse(localStorage.getItem(HABITS_KEY));return h&&h.length?h:['Fiber','Feet','Face','Kegels','Teeth'];}catch{return['Fiber','Feet','Face','Kegels','Teeth'];} };
 const saveHabits= h=>{ try{localStorage.setItem(HABITS_KEY,JSON.stringify(h));}catch{} };
 
 let HABITS = getHabits();
@@ -832,10 +830,11 @@ function renderToday(dayIdx) {
 function makeSecCard(title, icon, isDone, badge) {
   const card=document.createElement('div');
   card.className='sec-card';
-  const badgeClass=isDone?'complete':badge==='needed'||badge==='log today'||badge==='log it'?'incomplete':'';
+  const badgeClass=isDone?'complete':'';
+  const badgeText=badge==='needed'||badge==='log today'||badge==='log it'?'':badge;
   card.innerHTML=`<div class="sec-hdr">
     <span class="sec-hdr-title">${icon} ${title}</span>
-    <span class="sec-hdr-badge ${badgeClass}">${badge}</span>
+    <span class="sec-hdr-badge ${badgeClass}">${badgeText}</span>
   </div>
   <div class="sec-body"></div>`;
   return card;
@@ -1031,9 +1030,7 @@ function buildLogView() {
 function makeLogSection(title, isDone) {
   const wrap=document.createElement('div');
   wrap.innerHTML=`<div class="log-sec">
-    <div class="log-sec-title">${title}
-      <span class="req-badge${isDone?' done':''}">required</span>
-    </div>
+    <div class="log-sec-title">${title}</div>
   </div>`;
   return wrap;
 }
