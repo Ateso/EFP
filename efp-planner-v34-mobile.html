@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f4f4f2">
+<title>Today</title>
+<style>
+:root {
+  --navy: #002f4a; --sky: #3a8fc4; --sky-pale: #deeef8; --green: #1d9e6a; --green-pale: #d4f2e7;
+  --red: #c04040; --bg: #edf1f6; --surface: #fff; --border: #c8d8e8; --text: #002f4a; --muted: #4f6e84;
+  --radius: 12px; --radius-sm: 8px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Lato, sans-serif; font-size: 16px; line-height: 1.45; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+[hidden] { display: none !important; }
+
+/* ── COVER (neutral splash) ── */
+.cover { position: fixed; inset: 0; z-index: 100; background: #f4f4f2; color: #3a3a38; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .35rem; text-align: center; }
+.cover-time { font-size: 4.5rem; font-weight: 200; letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1; }
+.cover-date { font-size: 1.05rem; color: #77776f; }
+.cover-open { margin-top: 2.5rem; background: transparent; border: 1px solid #c9c9c3; color: #55554f; border-radius: 999px; padding: .6rem 2rem; min-height: 44px; cursor: pointer; }
+
+/* ── APP ── */
+.topbar { position: sticky; top: 0; z-index: 10; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: .7rem 1rem; }
+.topbar h1 { font-size: 1rem; font-weight: 700; margin: 0; letter-spacing: .02em; }
+.sync { font-size: .8rem; color: #b9d7ee; }
+main { max-width: 34rem; margin: 0 auto; padding: .75rem .9rem 3rem; }
+.days { display: grid; grid-template-columns: repeat(7, 1fr); gap: .3rem; margin-bottom: 1rem; list-style: none; padding: 0; }
+.day-btn { width: 100%; min-height: 52px; border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius-sm); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: .75rem; color: var(--muted); padding: .2rem 0; }
+.day-btn b { font-size: 1rem; color: var(--text); }
+.day-btn[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #cfe3f2; }
+.day-btn[aria-pressed="true"] b { color: #fff; }
+.day-btn[aria-current="date"]:not([aria-pressed="true"]) { border-color: var(--sky); border-width: 2px; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: .9rem; }
+.card h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 .75rem; display: flex; justify-content: space-between; align-items: baseline; }
+.card h2 span { text-transform: none; letter-spacing: 0; font-weight: 400; }
+
+.water { display: grid; grid-template-columns: repeat(8, 1fr); gap: .35rem; list-style: none; margin: 0; padding: 0; }
+.glass { width: 100%; aspect-ratio: 3 / 4; min-height: 44px; border: 1.5px solid var(--border); background: var(--surface); border-radius: var(--radius-sm); cursor: pointer; position: relative; overflow: hidden; }
+.glass::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: var(--sky); opacity: .55; transition: height .15s; }
+.glass[aria-pressed="true"] { border-color: var(--sky); }
+.glass[aria-pressed="true"]::after { height: 70%; }
+
+.field { margin-bottom: .75rem; }
+.field label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .25rem; }
+select, textarea { width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); padding: .6rem .7rem; min-height: 44px; }
+textarea { resize: vertical; }
+select.has-value, textarea.has-value { border-color: var(--sky); }
+.check { display: flex; align-items: center; gap: .6rem; min-height: 44px; cursor: pointer; font-weight: 600; }
+.check input { width: 1.35rem; height: 1.35rem; accent-color: var(--green); }
+.card.done { border-color: var(--green); }
+
+details.settings { margin-top: 1.5rem; }
+details.settings summary { cursor: pointer; color: var(--muted); min-height: 44px; display: flex; align-items: center; }
+.settings input { width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .6rem .7rem; min-height: 44px; background: var(--surface); }
+.btn { border: 1px solid var(--navy); background: var(--navy); color: #fff; border-radius: var(--radius-sm); padding: .6rem 1.2rem; min-height: 44px; cursor: pointer; font-weight: 600; }
+.hint { font-size: .85rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- Neutral cover shown on every open and when returning to the page -->
+<div class="cover" id="cover" role="dialog" aria-modal="true" aria-labelledby="coverTime">
+  <div class="cover-time" id="coverTime">--:--</div>
+  <div class="cover-date" id="coverDate"></div>
+  <button type="button" class="cover-open" id="coverOpen">Open</button>
+</div>
+
+<div id="app" inert>
+  <header class="topbar">
+    <h1 id="dayTitle">Today</h1>
+    <span class="sync" id="syncLabel">not connected</span>
+  </header>
+
+  <main>
+    <nav aria-label="Day of the week">
+      <ul class="days" id="days"></ul>
+    </nav>
+
+    <section class="card" id="waterCard" aria-labelledby="waterHeading">
+      <h2 id="waterHeading">Water <span id="waterCount">0 of 8</span></h2>
+      <ul class="water" id="water"></ul>
+    </section>
+
+    <section class="card" id="foodCard" aria-labelledby="foodHeading">
+      <h2 id="foodHeading">Food</h2>
+      <div id="meals"></div>
+      <div class="field">
+        <label for="mealNotes">Notes</label>
+        <textarea id="mealNotes" rows="2"></textarea>
+      </div>
+    </section>
+
+    <section class="card" id="exCard" aria-labelledby="exHeading">
+      <h2 id="exHeading">Exercise</h2>
+      <div class="field">
+        <label for="exText">Activity</label>
+        <textarea id="exText" rows="3" placeholder="Walk, gym, yoga…"></textarea>
+      </div>
+      <label class="check"><input type="checkbox" id="exDone"> Done</label>
+    </section>
+
+    <details class="settings">
+      <summary>Settings</summary>
+      <div class="field">
+        <label for="cfgUrl">Google Sheets Web App URL</label>
+        <input type="url" id="cfgUrl" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec">
+      </div>
+      <div class="field">
+        <label for="cfgName">Name</label>
+        <input type="text" id="cfgName" autocomplete="off">
+      </div>
+      <button type="button" class="btn" id="cfgSave">Save</button>
+      <p class="hint">Uses the same Sheets connection as the desktop planner. Water, food and exercise sync both ways.</p>
+    </details>
+  </main>
+</div>
+
+<div class="visually-hidden" role="status" aria-live="polite" id="announce"></div>
+
+<script>
+// ── STORAGE (same keys as the desktop planner) ────────────────────────────
+const CFG_KEY  = 'efp25-config';
+const MEAL_KEY = 'efp25-meals';
+const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS_FULL  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DEFAULT_MEALS = {
+  breakfast:['—','Breakfast Burrito','Cold Cereal','Egg Bites','Eggs and…','French Toast','Oatmeal','Omelettes','Pancakes','Waffles'],
+  lunch:    ['—','Ramen','Tuna Melt','Soup & Sandwich','Soup & Salad','Quiche','Hot Dogs','Egg Sandwich','Fast Food'],
+  dinner:   ['—','Barbeque Chicken','Chicken Sausage w/Pasta','Chicken and Broccoli','Pasta','Stir Fry','Soup','Salad','Leftovers','Takeout'],
+  snacks:   ['—','Cheese & Crackers','Carrot Sticks','Pretzels','Crackers','Granola Bars','Cookies','Smartfood','Cashews'],
+};
+const MEALS = [ {code:'b',key:'breakfast',label:'Breakfast'}, {code:'l',key:'lunch',label:'Lunch'},
+                {code:'d',key:'dinner',label:'Dinner'},       {code:'s',key:'snacks',label:'Snacks'} ];
+
+const today = new Date();
+function getMonday(d){ const dt=new Date(d),day=dt.getDay(); dt.setDate(dt.getDate()-day+(day===0?-6:1)); dt.setHours(0,0,0,0); return dt; }
+const weekStart = getMonday(today);
+const weekDates = Array.from({length:7},(_,i)=>{ const d=new Date(weekStart); d.setDate(weekStart.getDate()+i); return d; });
+const WEEK_KEY  = 'efp25-week-'+weekStart.toDateString();
+const ymd = d => { const m=d.getMonth()+1, x=d.getDate(); return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(x<10?'0':'')+x; };
+
+const read  = (k,d) => { try{ const v=JSON.parse(localStorage.getItem(k)); return v ?? d; }catch{ return d; } };
+const write = (k,v) => { try{ localStorage.setItem(k,JSON.stringify(v)); }catch{} };
+const getState  = () => read(WEEK_KEY,{});
+const saveState = s  => write(WEEK_KEY,s);
+const getConfig = () => read(CFG_KEY,{});
+const getMeals  = () => read(MEAL_KEY,null) || DEFAULT_MEALS;
+
+const $ = id => document.getElementById(id);
+const todayIdx = weekDates.findIndex(d=>d.toDateString()===today.toDateString());
+let dayIdx = todayIdx >= 0 ? todayIdx : 0;
+
+function announce(msg){ $('announce').textContent=''; setTimeout(()=>{ $('announce').textContent=msg; },50); }
+function setSync(lbl){ $('syncLabel').textContent=lbl; }
+
+// ── COVER ─────────────────────────────────────────────────────────────────
+function tickCover(){
+  const n=new Date();
+  $('coverTime').textContent=n.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  $('coverDate').textContent=n.toLocaleDateString([], {weekday:'long', month:'long', day:'numeric'});
+}
+function showCover(){
+  tickCover(); $('cover').hidden=false; $('app').inert=true; document.title='Today';
+  $('coverOpen').focus();
+}
+function hideCover(){
+  $('cover').hidden=true; $('app').inert=false;
+  $('dayTitle').setAttribute('tabindex','-1'); $('dayTitle').focus();
+}
+$('coverOpen').addEventListener('click', hideCover);
+setInterval(()=>{ if(!$('cover').hidden) tickCover(); }, 15000);
+let hiddenAt=0;
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'){ hiddenAt=Date.now(); return; }
+  if(hiddenAt && Date.now()-hiddenAt>30000) showCover(); // back after 30 s away
+  pullWeek();
+});
+
+// ── SYNC: send only what changed ──────────────────────────────────────────
+const dirty={}, timers={}, lastEdit={};
+function markDirty(i, field){
+  (dirty[i] = dirty[i] || new Set()).add(field);
+  lastEdit[i]=Date.now();
+  clearTimeout(timers[i]); timers[i]=setTimeout(()=>sendDay(i),1500);
+  setSync('saving…');
+}
+async function sendDay(i){
+  const cfg=getConfig(), fields=dirty[i]; delete dirty[i];
+  if(!cfg.url || !fields){ setSync(cfg.url?'saved':'saved on phone'); return; }
+  const s=getState(), d=weekDates[i];
+  const p={ type:'day', partial:true, date:ymd(d), dayName:DAYS_FULL[d.getDay()],
+            weekOf:weekStart.toLocaleDateString(), user:cfg.name||'—' };
+  fields.forEach(f=>{
+    if(f==='water'){ let n=0; for(let g=0;g<8;g++) if(s['water-'+i+'-'+g]) n++; p.waterGlasses=n; }
+    else if(f==='mealnotes') p.mealNotes=s['mealnotes-'+i]||'';
+    else if(f==='ex')  p.exercise=s['ex-'+i]||'';
+    else if(f==='exd') p.exerciseDone=!!s['exd-'+i];
+    else { const m=MEALS.find(x=>x.code===f); if(m) p[m.key]=s['meal-'+i+'-'+f]||''; }
+  });
+  try{
+    await fetch(cfg.url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});
+    setSync('saved');
+  }catch{ setSync('not saved'); announce('Couldn’t save to Sheets. Your entry is kept on this phone.'); fields.forEach(f=>markDirty(i,f)); }
+}
+
+// Bring in what the desktop (or the walking pad) logged
+async function pullWeek(){
+  const cfg=getConfig(); if(!cfg.url) return;
+  let days;
+  try{
+    const r=await fetch(cfg.url+'?action=getWeek&weekStart='+ymd(weekStart));
+    const j=await r.json(); if(j.status!=='ok') return; days=j.days||[];
+  }catch{ return; }
+  const s=getState(); let changed=false;
+  const setK=(k,v)=>{ if((s[k]||'')!==(v||'')){ if(v) s[k]=v; else delete s[k]; changed=true; } };
+  days.forEach(day=>{
+    const i=weekDates.findIndex(d=>ymd(d)===day.date);
+    if(i<0 || dirty[i] || (lastEdit[i] && Date.now()-lastEdit[i]<30000)) return;
+    for(let g=0;g<8;g++) setK('water-'+i+'-'+g, g<day.waterGlasses);
+    MEALS.forEach(m=>setK('meal-'+i+'-'+m.code, day[m.key]));
+    setK('mealnotes-'+i, day.mealNotes);
+    setK('ex-'+i, day.exercise); setK('exd-'+i, day.exerciseDone);
+  });
+  if(changed){ saveState(s); render(); }
+  setSync('synced');
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+function buildDays(){
+  const ul=$('days'); ul.innerHTML='';
+  weekDates.forEach((d,i)=>{
+    const li=document.createElement('li'), b=document.createElement('button');
+    b.type='button'; b.className='day-btn';
+    b.innerHTML=`${DAYS_SHORT[d.getDay()]}<b>${d.getDate()}</b>`;
+    b.setAttribute('aria-label', d.toLocaleDateString([], {weekday:'long', month:'long', day:'numeric'}));
+    b.setAttribute('aria-pressed', String(i===dayIdx));
+    if(i===todayIdx) b.setAttribute('aria-current','date');
+    b.addEventListener('click',()=>{ dayIdx=i; buildDays(); render(); ul.children[i].firstChild.focus(); });
+    li.appendChild(b); ul.appendChild(li);
+  });
+}
+
+function render(){
+  const s=getState(), d=weekDates[dayIdx];
+  $('dayTitle').textContent = dayIdx===todayIdx ? 'Today' : d.toLocaleDateString([], {weekday:'long', month:'short', day:'numeric'});
+
+  // Water
+  const ul=$('water'); ul.innerHTML=''; let n=0;
+  for(let g=0;g<8;g++){
+    const key='water-'+dayIdx+'-'+g, on=!!s[key]; if(on) n++;
+    const li=document.createElement('li'), b=document.createElement('button');
+    b.type='button'; b.className='glass';
+    b.setAttribute('aria-label','Glass '+(g+1)); b.setAttribute('aria-pressed',String(on));
+    b.addEventListener('click',()=>{
+      const st=getState(); st[key]=!st[key]; if(!st[key]) delete st[key]; saveState(st);
+      markDirty(dayIdx,'water'); render(); $('water').children[g].firstChild.focus();
+    });
+    li.appendChild(b); ul.appendChild(li);
+  }
+  $('waterCount').textContent=n+' of 8';
+  $('waterCard').classList.toggle('done', n>=8);
+
+  // Food
+  const meals=getMeals(), box=$('meals'); box.innerHTML=''; let mealsDone=0;
+  MEALS.forEach(m=>{
+    const key='meal-'+dayIdx+'-'+m.code, val=s[key]||'—';
+    const opts=[...(meals[m.key]||DEFAULT_MEALS[m.key])];
+    if(val!=='—' && !opts.includes(val)) opts.push(val);
+    const wrap=document.createElement('div'); wrap.className='field';
+    const id='meal-'+m.code;
+    wrap.innerHTML=`<label for="${id}">${m.label}</label>`;
+    const sel=document.createElement('select'); sel.id=id;
+    opts.forEach(o=>{ const op=document.createElement('option'); op.value=o; op.textContent=o==='—'?'Not logged':o; if(o===val) op.selected=true; sel.appendChild(op); });
+    const add=document.createElement('option'); add.value='__add'; add.textContent='+ Add to menu…'; sel.appendChild(add);
+    sel.classList.toggle('has-value', val!=='—');
+    if(val!=='—' && m.code!=='s') mealsDone++;
+    sel.addEventListener('change',()=>{
+      if(sel.value==='__add'){
+        const name=(prompt('Add to the '+m.label.toLowerCase()+' menu:')||'').trim();
+        if(!name){ sel.value=val; return; }
+        const ml=JSON.parse(JSON.stringify(getMeals()));
+        ml[m.key]=ml[m.key]||[...DEFAULT_MEALS[m.key]];
+        if(!ml[m.key].includes(name)) ml[m.key].push(name);
+        write(MEAL_KEY,ml);
+        const st=getState(); st[key]=name; saveState(st); markDirty(dayIdx,m.code);
+        render(); $(id).focus(); announce(name+' added to '+m.label); return;
+      }
+      const st=getState(); if(sel.value==='—') delete st[key]; else st[key]=sel.value; saveState(st);
+      sel.classList.toggle('has-value', sel.value!=='—'); markDirty(dayIdx,m.code);
+    });
+    wrap.appendChild(sel); box.appendChild(wrap);
+  });
+  $('foodCard').classList.toggle('done', mealsDone===3);
+  const mn=$('mealNotes'); mn.value=s['mealnotes-'+dayIdx]||''; mn.classList.toggle('has-value',!!mn.value);
+
+  // Exercise
+  const ex=$('exText'); ex.value=s['ex-'+dayIdx]||''; ex.classList.toggle('has-value',!!ex.value);
+  $('exDone').checked=!!s['exd-'+dayIdx];
+  $('exCard').classList.toggle('done', !!ex.value && $('exDone').checked);
+}
+
+// Text fields keep focus while typing, so they're wired once rather than rebuilt
+$('mealNotes').addEventListener('input',e=>{
+  const st=getState(); st['mealnotes-'+dayIdx]=e.target.value; saveState(st);
+  e.target.classList.toggle('has-value',!!e.target.value); markDirty(dayIdx,'mealnotes');
+});
+$('exText').addEventListener('input',e=>{
+  const st=getState(); st['ex-'+dayIdx]=e.target.value; saveState(st);
+  e.target.classList.toggle('has-value',!!e.target.value); markDirty(dayIdx,'ex');
+  $('exCard').classList.toggle('done', !!e.target.value && $('exDone').checked);
+});
+$('exDone').addEventListener('change',e=>{
+  const st=getState(); if(e.target.checked) st['exd-'+dayIdx]=true; else delete st['exd-'+dayIdx]; saveState(st);
+  markDirty(dayIdx,'exd'); $('exCard').classList.toggle('done', !!$('exText').value && e.target.checked);
+});
+
+// ── SETTINGS ──────────────────────────────────────────────────────────────
+(function initSettings(){
+  const c=getConfig(); $('cfgUrl').value=c.url||''; $('cfgName').value=c.name||'';
+  setSync(c.url?'connected':'not connected');
+  $('cfgSave').addEventListener('click',()=>{
+    const url=$('cfgUrl').value.trim();
+    write(CFG_KEY,{...getConfig(), url, name:$('cfgName').value.trim()});
+    setSync(url?'connected':'not connected'); announce('Settings saved'); pullWeek();
+  });
+})();
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+buildDays(); render(); showCover(); pullWeek();
+</script>
+</body>
+</html>
